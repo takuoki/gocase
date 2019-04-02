@@ -1,5 +1,7 @@
 # gocase
 
+[![CircleCI](https://circleci.com/gh/takuoki/gocase/tree/master.svg?style=svg&circle-token=06a2582cde9cc3c182873c3ec5dddb67e9388cf6)](https://circleci.com/gh/takuoki/gocase/tree/master)
+
 A golang package to convert to normal CamelCase or Golang's CamelCase.
 
 ## Example
