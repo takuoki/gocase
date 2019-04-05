@@ -1,9 +1,11 @@
+// Package gocase is a package to convert normal CamelCase to Golang's CamelCase and vice versa.
+// Golang's CamelCase means a string that takes into account to Go's common initialisms.
+// For more details, see `golang.org/x/lint/golint`.
 package gocase
 
 import "strings"
 
 // To returns a string converted to Go case.
-// Go case means a string that takes into account to Go's common initialisms.
 func To(s string) string {
 	for _, ci := range commonInitialisms {
 		s = strings.Replace(s, ci[1], ci[0], -1)
@@ -12,7 +14,6 @@ func To(s string) string {
 }
 
 // Revert returns a string converted from Go case to normal case.
-// Go case means a string that takes into account to Go's common initialisms.
 func Revert(s string) string {
 	for _, ci := range commonInitialisms {
 		s = strings.Replace(s, ci[0], ci[1], -1)
