@@ -53,6 +53,16 @@ The default converter converts as follows
 | "somethingUuid"      | "somethingUUID"      |
 | "somethingSip"       | "somethingSIP"       |
 
+## !!! WARNING !!!
+
+Note that it is impossible to accurately determine the word break in a string of consecutive uppercase words,
+so the string converted with `To` and `Revert` may not match the original string.
+
+**example**
+
+- `IdB` --To-> `IDB` --Revert-> `IDb`
+- `UUid` --To-> `UUID` --Revert-> `Uuid`
+
 ## Reference
 
 For more details, please see [initialisms section](https://staticcheck.io/docs/configuration/options/#initialisms) in [Staticcheck](https://staticcheck.io/).

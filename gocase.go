@@ -7,6 +7,8 @@
 package gocase
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -18,20 +20,30 @@ func To(s string) string {
 // To returns a string converted to Go case with converter.
 func (c *Converter) To(s string) string {
 	for _, i := range c.initialisms {
-		s = strings.Replace(s, i[1], i[0], -1)
+		// not end
+		re1 := regexp.MustCompile(fmt.Sprintf("%s([^a-z])", i.capUpper()))
+		s = re1.ReplaceAllString(s, i.allUpper()+"$1")
+
+		// end
+		re2 := regexp.MustCompile(fmt.Sprintf("%s$", i.capUpper()))
+		s = re2.ReplaceAllString(s, i.allUpper())
 	}
 	return s
 }
 
 // Revert returns a string converted from Go case to normal case.
+// Note that it is impossible to accurately determine the word break in a string of
+// consecutive uppercase words, so the conversion maynot work as expected.
 func Revert(s string) string {
 	return defaultConverter.Revert(s)
 }
 
 // Revert returns a string converted from Go case to normal case with converter.
+// Note that it is impossible to accurately determine the word break in a string of
+// consecutive uppercase words, so the conversion maynot work as expected.
 func (c *Converter) Revert(s string) string {
 	for _, i := range c.initialisms {
-		s = strings.Replace(s, i[0], i[1], -1)
+		s = strings.Replace(s, i.allUpper(), i.capUpper(), -1)
 	}
 	return s
 }

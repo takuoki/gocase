@@ -35,6 +35,14 @@ func newInitialism(s1, s2 string) initialism {
 	return [2]string{s1, s2}
 }
 
+func (i initialism) allUpper() string {
+	return i[0]
+}
+
+func (i initialism) capUpper() string {
+	return i[1]
+}
+
 func createInitialisms(initialisms ...string) ([]initialism, error) {
 	results := make([]initialism, 0, len(initialisms))
 	for _, i := range initialisms {
