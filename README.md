@@ -6,7 +6,6 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 A golang package to convert normal CamelCase to Golang's CamelCase and vice versa.
-Golang's CamelCase means a string that takes into account to Go's common initialisms.
 
 ## Install
 
