@@ -12,10 +12,11 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          cache: true
-      - name: Download module
-        run: go mod download
-        working-directory: .
+          # cache: true
+      # because of no dependencies
+      # - name: Download module
+      #   run: go mod download
+      #   working-directory: .
       - name: Execute linter
         uses: golangci/golangci-lint-action@v3
         with:
@@ -30,10 +31,11 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          cache: true
-      - name: Download module
-        run: go mod download
-        working-directory: .
+          # cache: true
+      # because of no dependencies
+      # - name: Download module
+      #   run: go mod download
+      #   working-directory: .
       - name: Test
         run: go test -race -cover -coverprofile="coverage.txt" ./...
         working-directory: .
