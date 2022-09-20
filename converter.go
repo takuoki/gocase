@@ -46,8 +46,8 @@ func newFuncOption(f func(*Converter) error) *funcOption {
 	}
 }
 
-// WithInitialisms TODO is an option to start the index from one.
-// This option works for both `Atoi` and `Itoa`.
+// WithInitialisms is an option to set initialisms.
+// If you want to add to the default initialisms, use `DefaultInitialisms`.
 func WithInitialisms(initialisms ...string) Option {
 	return newFuncOption(func(c *Converter) error {
 		i, err := createInitialisms(initialisms...)
