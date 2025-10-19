@@ -23,14 +23,14 @@ func (c *Converter) To(s string) string {
 
 // Revert returns a string converted from Go case to normal case.
 // Note that it is impossible to accurately determine the word break in a string of
-// consecutive uppercase words, so the conversion maynot work as expected.
+// consecutive uppercase words, so the conversion may not work as expected.
 func Revert(s string) string {
 	return defaultConverter.Revert(s)
 }
 
 // Revert returns a string converted from Go case to normal case with converter.
 // Note that it is impossible to accurately determine the word break in a string of
-// consecutive uppercase words, so the conversion maynot work as expected.
+// consecutive uppercase words, so the conversion may not work as expected.
 func (c *Converter) Revert(s string) string {
 	return c.replacer.Replace(s)
 }
