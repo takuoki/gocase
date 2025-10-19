@@ -20,11 +20,10 @@ const (
 // [initialisms section]: https://staticcheck.io/docs/configuration/options/#initialisms
 var DefaultInitialisms = []string{
 	"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP",
-	"HTTPS", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP",
-	"TLS", "TTL", "UDP", "GID", "UUID", "URI", "URL", "UTF8", "VM", "XML",
-	"XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP", "DB", "TS",
-	// Lower priority due to collision
-	"UID", "ID", "IP", "UI",
+	"HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL",
+	"SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI",
+	"URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP",
+	"DB", "TS",
 }
 
 // initialism is a type that describes initialization rule.

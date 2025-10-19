@@ -65,6 +65,44 @@ func TestConverter_Revert(t *testing.T) {
 	}
 }
 
+// TestReplacerWithDifferentOrder tests that initialisms with different orders
+// produce the same result when using strings.Replacer.
+func TestConverter_WithDifferentOrder(t *testing.T) {
+	// Create converters with different orders
+	order1 := []string{"ID", "UID", "UUID", "GUID"}
+	order2 := []string{"UUID", "GUID", "UID", "ID"}
+
+	conv1, _ := gocase.New(gocase.WithInitialisms(order1...))
+	conv2, _ := gocase.New(gocase.WithInitialisms(order2...))
+
+	cases := []string{
+		// for To
+		"Id", "Uid", "Uuid", "Guid",
+		"someId", "someUid", "someUuid", "someGuid",
+		"Id_Uid_Uuid_Guid",
+		// for Revert
+		"ID", "UID", "UUID", "GUID",
+		"someID", "someUID", "someUUID", "someGUID",
+		"ID_UID_UUID_GUID",
+	}
+
+	for _, c := range cases {
+		toResult1 := conv1.To(c)
+		toResult2 := conv2.To(c)
+
+		if toResult1 != toResult2 {
+			t.Errorf("To: order matters for %q: order1=%q, order2=%q", c, toResult1, toResult2)
+		}
+
+		revertResult1 := conv1.Revert(c)
+		revertResult2 := conv2.Revert(c)
+
+		if revertResult1 != revertResult2 {
+			t.Errorf("Revert: order matters for %q: order1=%q, order2=%q", c, revertResult1, revertResult2)
+		}
+	}
+}
+
 // FuzzReverse runs a Fuzzing test to check if the strings
 // before and after `To` and `Revert` match.
 // Note that there may be cases where the strings before and after
