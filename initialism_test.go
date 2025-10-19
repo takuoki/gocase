@@ -24,8 +24,9 @@ func TestCreateInitialisms(t *testing.T) {
 				t.Errorf("value length doesn't match: %d (want %d)", len(r), len(c.want))
 			} else {
 				for i, w := range c.want {
-					if r[i] != w {
-						t.Errorf("value doesn't match: %v (want %v)", r[i], w)
+					if !equalInitialism(r[i], w) {
+						t.Errorf("value doesn't match at index %d: {allUpper: %s, capUpper: %s} (want {allUpper: %s, capUpper: %s})",
+							i, r[i].allUpper(), r[i].capUpper(), w.allUpper(), w.capUpper())
 					}
 				}
 			}
@@ -70,4 +71,21 @@ func TestConvertToOnlyFirstLetterCapitalizedString(t *testing.T) {
 			}
 		}
 	}
+}
+
+// equalInitialism compares two initialism values for equality.
+// Since initialism contains regexp pointers, we compare the string values
+// and verify that regex fields are not nil.
+func equalInitialism(a, b initialism) bool {
+	if a.allUpper() != b.allUpper() || a.capUpper() != b.capUpper() {
+		return false
+	}
+	// Verify that regex patterns are not nil (they should be initialized)
+	if a.notEndRegex == nil || a.endRegex == nil {
+		return false
+	}
+	if b.notEndRegex == nil || b.endRegex == nil {
+		return false
+	}
+	return true
 }

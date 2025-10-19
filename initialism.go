@@ -3,6 +3,7 @@ package gocase
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode/utf8"
 )
@@ -29,18 +30,33 @@ var DefaultInitialisms = []string{
 // initialism is a type that describes initialization rule.
 // The first element is set to an all uppercase string.
 // The second element is set to a string with only the first letter capitalized.
-type initialism [2]string
+// The third and fourth elements are pre-compiled regular expressions for performance.
+type initialism struct {
+	allUpperStr string
+	capUpperStr string
+	notEndRegex *regexp.Regexp
+	endRegex    *regexp.Regexp
+}
 
-func newInitialism(s1, s2 string) initialism {
-	return [2]string{s1, s2}
+func newInitialism(allUpper, capUpper string) initialism {
+	// Pre-compile regular expressions for better performance
+	notEndRegex := regexp.MustCompile(fmt.Sprintf("%s([^a-z])", capUpper))
+	endRegex := regexp.MustCompile(fmt.Sprintf("%s$", capUpper))
+
+	return initialism{
+		allUpperStr: allUpper,
+		capUpperStr: capUpper,
+		notEndRegex: notEndRegex,
+		endRegex:    endRegex,
+	}
 }
 
 func (i initialism) allUpper() string {
-	return i[0]
+	return i.allUpperStr
 }
 
 func (i initialism) capUpper() string {
-	return i[1]
+	return i.capUpperStr
 }
 
 func createInitialisms(initialisms ...string) ([]initialism, error) {
