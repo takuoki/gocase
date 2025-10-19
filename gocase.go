@@ -43,7 +43,7 @@ func Revert(s string) string {
 // consecutive uppercase words, so the conversion maynot work as expected.
 func (c *Converter) Revert(s string) string {
 	for _, i := range c.initialisms {
-		s = strings.Replace(s, i.allUpper(), i.capUpper(), -1)
+		s = strings.ReplaceAll(s, i.allUpper(), i.capUpper())
 	}
 	return s
 }
