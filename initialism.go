@@ -28,9 +28,8 @@ var DefaultInitialisms = []string{
 }
 
 // initialism is a type that describes initialization rule.
-// The first element is set to an all uppercase string.
-// The second element is set to a string with only the first letter capitalized.
-// The third and fourth elements are pre-compiled regular expressions for performance.
+// It contains an all-uppercase string, a capitalized string (only the first letter uppercase),
+// and pre-compiled regular expressions for efficient pattern matching.
 type initialism struct {
 	allUpperStr string
 	capUpperStr string
@@ -38,6 +37,10 @@ type initialism struct {
 	endRegex    *regexp.Regexp
 }
 
+// newInitialism creates a new initialism with pre-compiled regular expressions.
+// The allUpper parameter should be the all-uppercase form (e.g., "API").
+// The capUpper parameter should be the capitalized form (e.g., "Api").
+// Regular expressions are compiled once during initialization for better performance.
 func newInitialism(allUpper, capUpper string) initialism {
 	// Pre-compile regular expressions for better performance
 	notEndRegex := regexp.MustCompile(fmt.Sprintf("%s([^a-z])", capUpper))
