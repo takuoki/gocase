@@ -12,7 +12,7 @@ func TestCreateInitialisms(t *testing.T) {
 	}{
 		{in: []string{"ACL"}, want: []initialism{newInitialism("ACL", "Acl")}},
 		{in: []string{"api", "aSCII"}, want: []initialism{newInitialism("API", "Api"), newInitialism("ASCII", "Ascii")}},
-		{in: []string{"UTF!"}, wantErr: "input \"UTF!\" is not alpha-numeric character"},
+		{in: []string{"UTF!"}, wantErr: "input \"UTF!\" contains non-alphanumeric character '!' at position 3"},
 	}
 
 	for _, c := range cases {
@@ -50,7 +50,7 @@ func TestConvertToOnlyFirstLetterCapitalizedString(t *testing.T) {
 		{in: "aSCII", want: "Ascii"},
 		{in: "cPu", want: "Cpu"},
 		{in: "UTF8", want: "Utf8"},
-		{in: "UTF!", wantErr: "input \"UTF!\" is not alpha-numeric character"},
+		{in: "UTF!", wantErr: "input \"UTF!\" contains non-alphanumeric character '!' at position 3"},
 		{in: "aa\xe2", wantErr: "input is not valid UTF-8"},
 	}
 

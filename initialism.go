@@ -79,7 +79,7 @@ func convertToOnlyFirstLetterCapitalizedString(str string) (string, error) {
 		} else if '0' <= r && r <= '9' {
 			result = append(result, r)
 		} else {
-			return "", fmt.Errorf("input %q is not alpha-numeric character", str)
+			return "", fmt.Errorf("input %q contains non-alphanumeric character %q at position %d", str, r, i)
 		}
 	}
 

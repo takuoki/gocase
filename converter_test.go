@@ -12,7 +12,7 @@ func TestNew(t *testing.T) {
 		wantErr string
 	}{
 		{opts: []gocase.Option{gocase.WithInitialisms("JSON", "CSV")}},
-		{opts: []gocase.Option{gocase.WithInitialisms("UTF8", "UTF!")}, wantErr: "input \"UTF!\" is not alpha-numeric character"},
+		{opts: []gocase.Option{gocase.WithInitialisms("UTF8", "UTF!")}, wantErr: "input \"UTF!\" contains non-alphanumeric character '!' at position 3"},
 	}
 
 	for _, c := range cases {
