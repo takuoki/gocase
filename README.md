@@ -1,6 +1,6 @@
 # gocase
 
-[![GoDoc](https://godoc.org/github.com/takuoki/gocase?status.svg)](https://godoc.org/github.com/takuoki/gocase)
+[![Go Reference](https://pkg.go.dev/badge/github.com/takuoki/gocase.svg)](https://pkg.go.dev/github.com/takuoki/gocase)
 ![CI](https://github.com/takuoki/gocase/actions/workflows/auto-test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/takuoki/gocase/branch/main/graph/badge.svg?token=s2jxPXhDjF)](https://codecov.io/gh/takuoki/gocase)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
@@ -9,8 +9,8 @@ A golang package to convert normal CamelCase to Golang's CamelCase and vice vers
 
 ## Install
 
-```cmd
-go get -u github.com/takuoki/gocase
+```bash
+go get github.com/takuoki/gocase
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ str := gocase.To("IpAddress") // "IPAddress"
 ```
 
 ```go
-str := gocase.To("defaultDNSServer") // "defaultDnsServer"
+str := gocase.Revert("defaultDNSServer") // "defaultDnsServer"
 ```
 
 ### Custom converter
@@ -31,6 +31,17 @@ str := gocase.To("defaultDNSServer") // "defaultDnsServer"
 converter, _ := gocase.New(gocase.WithInitialisms("JSON", "CSV"))
 
 str1 := converter.To("IpAddress") // "IpAddress" (no convert)
+str2 := converter.To("JsonFile")  // "JSONFile"
+str3 := converter.To("CsvFile")   // "CSVFile"
+```
+
+To add custom initialisms to the default list, use `gocase.DefaultInitialisms`:
+
+```go
+initialisms := append([]string{"JSON", "CSV"}, gocase.DefaultInitialisms...)
+converter, _ := gocase.New(gocase.WithInitialisms(initialisms...))
+
+str1 := converter.To("IpAddress") // "IPAddress"
 str2 := converter.To("JsonFile")  // "JSONFile"
 str3 := converter.To("CsvFile")   // "CSVFile"
 ```
