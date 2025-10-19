@@ -6,12 +6,6 @@
 // [initialisms section]: https://staticcheck.io/docs/configuration/options/#initialisms
 package gocase
 
-import (
-	"fmt"
-	"regexp"
-	"strings"
-)
-
 // To returns a string converted to Go case.
 func To(s string) string {
 	return defaultConverter.To(s)
@@ -20,13 +14,9 @@ func To(s string) string {
 // To returns a string converted to Go case with converter.
 func (c *Converter) To(s string) string {
 	for _, i := range c.initialisms {
-		// not end
-		re1 := regexp.MustCompile(fmt.Sprintf("%s([^a-z])", i.capUpper()))
-		s = re1.ReplaceAllString(s, i.allUpper()+"$1")
-
-		// end
-		re2 := regexp.MustCompile(fmt.Sprintf("%s$", i.capUpper()))
-		s = re2.ReplaceAllString(s, i.allUpper())
+		// Use pre-compiled regular expressions
+		s = i.notEndRegex.ReplaceAllString(s, i.allUpper()+"$1")
+		s = i.endRegex.ReplaceAllString(s, i.allUpper())
 	}
 	return s
 }
@@ -42,8 +32,5 @@ func Revert(s string) string {
 // Note that it is impossible to accurately determine the word break in a string of
 // consecutive uppercase words, so the conversion maynot work as expected.
 func (c *Converter) Revert(s string) string {
-	for _, i := range c.initialisms {
-		s = strings.ReplaceAll(s, i.allUpper(), i.capUpper())
-	}
-	return s
+	return c.replacer.Replace(s)
 }

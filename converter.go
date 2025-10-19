@@ -1,10 +1,13 @@
 package gocase
 
+import "strings"
+
 // Converter represents a conversion object.
 // If you need a conversion other than the default,
 // you need create a new conversion object.
 type Converter struct {
 	initialisms []initialism
+	replacer    *strings.Replacer
 }
 
 var defaultConverter = newDefault()
@@ -13,7 +16,17 @@ func newDefault() *Converter {
 	i, _ := createInitialisms(DefaultInitialisms...)
 	return &Converter{
 		initialisms: i,
+		replacer:    createReplacer(i),
 	}
+}
+
+// createReplacer creates a strings.Replacer for efficient Revert operations.
+func createReplacer(initialisms []initialism) *strings.Replacer {
+	pairs := make([]string, 0, len(initialisms)*2)
+	for _, i := range initialisms {
+		pairs = append(pairs, i.allUpper(), i.capUpper())
+	}
+	return strings.NewReplacer(pairs...)
 }
 
 // New creates a new Converter.
@@ -55,6 +68,7 @@ func WithInitialisms(initialisms ...string) Option {
 			return err
 		}
 		c.initialisms = i
+		c.replacer = createReplacer(i)
 		return nil
 	})
 }

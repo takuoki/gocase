@@ -3,6 +3,7 @@ package gocase
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode/utf8"
 )
@@ -19,28 +20,45 @@ const (
 // [initialisms section]: https://staticcheck.io/docs/configuration/options/#initialisms
 var DefaultInitialisms = []string{
 	"ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP",
-	"HTTPS", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP",
-	"TLS", "TTL", "UDP", "GID", "UUID", "URI", "URL", "UTF8", "VM", "XML",
-	"XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP", "DB", "TS",
-	// Lower priority due to collision
-	"UID", "ID", "IP", "UI",
+	"HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL",
+	"SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI",
+	"URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP",
+	"DB", "TS",
 }
 
 // initialism is a type that describes initialization rule.
-// The first element is set to an all uppercase string.
-// The second element is set to a string with only the first letter capitalized.
-type initialism [2]string
+// It contains an all-uppercase string, a capitalized string (only the first letter uppercase),
+// and pre-compiled regular expressions for efficient pattern matching.
+type initialism struct {
+	allUpperStr string
+	capUpperStr string
+	notEndRegex *regexp.Regexp
+	endRegex    *regexp.Regexp
+}
 
-func newInitialism(s1, s2 string) initialism {
-	return [2]string{s1, s2}
+// newInitialism creates a new initialism with pre-compiled regular expressions.
+// The allUpper parameter should be the all-uppercase form (e.g., "API").
+// The capUpper parameter should be the capitalized form (e.g., "Api").
+// Regular expressions are compiled once during initialization for better performance.
+func newInitialism(allUpper, capUpper string) initialism {
+	// Pre-compile regular expressions for better performance
+	notEndRegex := regexp.MustCompile(fmt.Sprintf("%s([^a-z])", capUpper))
+	endRegex := regexp.MustCompile(fmt.Sprintf("%s$", capUpper))
+
+	return initialism{
+		allUpperStr: allUpper,
+		capUpperStr: capUpper,
+		notEndRegex: notEndRegex,
+		endRegex:    endRegex,
+	}
 }
 
 func (i initialism) allUpper() string {
-	return i[0]
+	return i.allUpperStr
 }
 
 func (i initialism) capUpper() string {
-	return i[1]
+	return i.capUpperStr
 }
 
 func createInitialisms(initialisms ...string) ([]initialism, error) {
@@ -79,7 +97,7 @@ func convertToOnlyFirstLetterCapitalizedString(str string) (string, error) {
 		} else if '0' <= r && r <= '9' {
 			result = append(result, r)
 		} else {
-			return "", fmt.Errorf("input %q is not alpha-numeric character", str)
+			return "", fmt.Errorf("input %q contains non-alphanumeric character %q at position %d", str, r, i)
 		}
 	}
 
